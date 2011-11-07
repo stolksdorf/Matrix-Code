@@ -1,0 +1,55 @@
+if(feed[pf].active){
+	feed[pf].count--;
+	if(feed[pf].count==0){								
+		feed[pf].count=feed[pf].delay;
+		feed[pf].head++;
+		temp_pos=feed[pf].head;
+		if((feed[pf].head-feed[pf].len)-1>=screeny){
+				feed[pf].active=false;
+				break;
+			}
+		if(feed[pf].head<screeny)
+			m_color[feed[pf].xpos][feed[pf].head]=15;			
+		while(1){
+			temp_pos--;
+			if(temp_pos==-1)
+				break;
+			if(temp_pos<screeny){
+				if((feed[pf].head-temp_pos)>(feed[pf].len)){		
+					m_color[feed[pf].xpos][temp_pos]=0;
+					break;
+				}
+				if((feed[pf].head-temp_pos)>(feed[pf].len*.6))		
+					m_color[feed[pf].xpos][temp_pos]=feed[pf].drk;
+				
+				if((feed[pf].head-temp_pos)<(feed[pf].len*.6))		
+					m_color[feed[pf].xpos][temp_pos]=feed[pf].lght;
+			}
+		}
+	}
+}
+
+this is the old code. It would start at the beginning of the feed a change the colors as it moved up the feed positions. Lots of unnesssicary looping, notice the while loop. Icky
+
+
+if(feed[pf].active){
+	feed[pf].count--;
+	if(feed[pf].count==0){
+		feed[pf].count=feed[pf].delay;
+		feed[pf].head++;
+		if((feed[pf].head-feed[pf].len)>=screeny){
+			feed[pf].active=false;
+			continue;
+		}
+		if(feed[pf].head<screeny)
+			m_color[feed[pf].xpos][feed[pf].head]=15;
+		if(((feed[pf].head-1)>=0)&&((feed[pf].head-1)<screeny))
+			m_color[feed[pf].xpos][feed[pf].head-1]=feed[pf].lght;
+		if(((feed[pf].head-feed[pf].len*.6)>=0)&&((feed[pf].head-feed[pf].len*.6)<screeny))
+			m_color[feed[pf].xpos][feed[pf].head-feed[pf].len*.6]=feed[pf].drk;
+		if(((feed[pf].head-feed[pf].len)>=0)&&((feed[pf].head-feed[pf].len)<screeny))
+			m_color[feed[pf].xpos][feed[pf].head-feed[pf].len]=0;
+	}
+}
+
+theres four positions on each feed that change each cycle. The leading white character, the light green one behind it, the dark green one, and the final black one. This uses 5 if statements, one for each color to check boundaries, and a fifth to see if the feed is in fact dead. highly efficient and elegant.
